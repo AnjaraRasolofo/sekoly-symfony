@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="d-flex">
+
+    {# Sidebar #}
+    {% include 'layout/_sidebar.html.twig' %}
+
+    <div class="flex-grow-1">
+
+        {# Header #}
+        {% include 'layout/_header.html.twig' %}
+
+        <main class="p-4">
+            {% block content %}{% endblock %}
+        </main>
+
+    </div>
+
+</div>
+{% endblock %}
