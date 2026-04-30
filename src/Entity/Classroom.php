@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\ClassroomRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: ClassroomRepository::class)]
 class Classroom
@@ -11,36 +14,45 @@ class Classroom
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['classroom:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    #[Groups(['classroom:read'])]
+    private ?string $classname = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['classroom:read'])]
     private ?string $level = null;
 
     #[ORM\Column]
+    #[Groups(['classroom:read'])]
     private ?int $capacity = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    /**
+     * @var Collection<int, Enrollment>
+     */
+    #[ORM\OneToMany(targetEntity: Enrollment::class, mappedBy: 'classroom', orphanRemoval: true)]
+    private Collection $enrollments;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $updatedAt = null;
+    public function __construct()
+    {
+        $this->enrollments = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getClassname(): ?string
     {
-        return $this->name;
+        return $this->classname;
     }
 
-    public function setName(string $name): static
+    public function setClassname(string $classname): static
     {
-        $this->name = $name;
+        $this->classname = $classname;
 
         return $this;
     }
@@ -69,27 +81,34 @@ class Classroom
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
+
+/**
+ * @return Collection<int, Enrollment>
+ */
+public function getEnrollments(): Collection
+{
+    return $this->enrollments;
+}
+
+public function addEnrollment(Enrollment $enrollment): static
+{
+    if (!$this->enrollments->contains($enrollment)) {
+        $this->enrollments->add($enrollment);
+        $enrollment->setClassroom($this);
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
+    return $this;
+}
 
-        return $this;
+public function removeEnrollment(Enrollment $enrollment): static
+{
+    if ($this->enrollments->removeElement($enrollment)) {
+        // set the owning side to null (unless already changed)
+        if ($enrollment->getClassroom() === $this) {
+            $enrollment->setClassroom(null);
+        }
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
+    return $this;
+}
 }

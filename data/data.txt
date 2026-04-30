@@ -1,0 +1,156 @@
+[  /* Student*/
+    {
+    "firstname": "Jean",
+    "lastname": "Rakoto",
+    "birthDate": "2008-04-12",
+    "gender": "male",
+    "address": "Antananarivo",
+    "phone": "0341234567",
+    "email": "jean.rakoto@example.com",
+    "status": "active",
+    "medicalNote": "None"
+    },
+    {
+    "firstname": "Marie",
+    "lastname": "Rasoanaivo",
+    "birthDate": "2007-11-03",
+    "gender": "female",
+    "address": "Fianarantsoa",
+    "phone": "0329876543",
+    "email": "marie.raso@example.com",
+    "status": "active",
+    "medicalNote": "Asthma"
+    },
+    {
+    "firstname": "Toky",
+    "lastname": "Randria",
+    "birthDate": "2009-01-25",
+    "gender": "male",
+    "address": "Toamasina",
+    "phone": "0334567890",
+    "email": "toky.randria@example.com",
+    "status": "active",
+    "medicalNote": "None"
+    },
+    {
+    "firstname": "Lova",
+    "lastname": "Andrianina",
+    "birthDate": "2008-06-18",
+    "gender": "female",
+    "address": "Mahajanga",
+    "phone": "0349988776",
+    "email": "lova.andria@example.com",
+    "status": "active",
+    "medicalNote": "Peanut allergy"
+    },
+    {
+    "firstname": "Hery",
+    "lastname": "Rakotomalala",
+    "birthDate": "2007-09-10",
+    "gender": "male",
+    "address": "Antsirabe",
+    "phone": "0321122334",
+    "email": "hery.rakoto@example.com",
+    "status": "active",
+    "medicalNote": "None"
+    },
+    {
+    "firstname": "Fara",
+    "lastname": "Raveloson",
+    "birthDate": "2009-03-14",
+    "gender": "female",
+    "address": "Toliara",
+    "phone": "0339988112",
+    "email": "fara.raveloson@example.com",
+    "status": "active",
+    "medicalNote": "Diabetic"
+    },
+    {
+    "firstname": "Mickael",
+    "lastname": "Ratsimba",
+    "birthDate": "2008-12-01",
+    "gender": "male",
+    "address": "Antananarivo",
+    "phone": "0345566778",
+    "email": "mickael.ratsimba@example.com",
+    "status": "active",
+    "medicalNote": "None"
+    },
+    {
+    "firstname": "Noro",
+    "lastname": "Razanajatovo",
+    "birthDate": "2007-05-20",
+    "gender": "female",
+    "address": "Antsirabe",
+    "phone": "0326677889",
+    "email": "noro.raza@example.com",
+    "status": "active",
+    "medicalNote": "None"
+    },
+    {
+    "firstname": "Tiana",
+    "lastname": "Rakotonirina",
+    "birthDate": "2009-08-30",
+    "gender": "male",
+    "address": "Fianarantsoa",
+    "phone": "0332211445",
+    "email": "tiana.rakoto@example.com",
+    "status": "active",
+    "medicalNote": "Vision issues"
+    },
+    {
+    "firstname": "Soa",
+    "lastname": "Ramanantsoa",
+    "birthDate": "2008-02-17",
+    "gender": "female",
+    "address": "Toamasina",
+    "phone": "0343344556",
+    "email": "soa.ramanantsoa@example.com",
+    "status": "active",
+    "medicalNote": "None"
+    }
+],
+
+
+
+[
+  {
+    "name": "Salle A1",
+    "capacity": 30,
+    "building": "Bloc A",
+    "floor": 1,
+    "type": "Cours",
+    "hasProjector": true
+  },
+  {
+    "name": "Salle B2",
+    "capacity": 25,
+    "building": "Bloc B",
+    "floor": 2,
+    "type": "Informatique",
+    "hasProjector": true
+  },
+  {
+    "name": "Amphi C",
+    "capacity": 100,
+    "building": "Bloc C",
+    "floor": 0,
+    "type": "Amphithéâtre",
+    "hasProjector": true
+  },
+  {
+    "name": "Salle D1",
+    "capacity": 20,
+    "building": "Bloc D",
+    "floor": 1,
+    "type": "Travaux dirigés",
+    "hasProjector": false
+  },
+  {
+    "name": "Lab Info 1",
+    "capacity": 40,
+    "building": "Bloc B",
+    "floor": 1,
+    "type": "Laboratoire",
+    "hasProjector": true
+  }

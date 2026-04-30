@@ -3,8 +3,11 @@
 namespace App\Entity;
 
 use App\Repository\StudentRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: StudentRepository::class)]
 class Student
@@ -12,219 +15,162 @@ class Student
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['enrollment:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['enrollment:read'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['enrollment:read'])]
     private ?string $lastname = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTime $birthDate = null;
+    private ?\DateTimeInterface $birthDate = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 50)]
     private ?string $gender = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $parentName = null;
+    private ?string $address = null;
+
+    #[ORM\Column(length: 50)]
+    private ?string $phone = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $parentPhone = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $parentEmail = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $parentAddress = null;
+    private ?string $email = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTime $registrationDate = null;
+    private ?\DateTimeInterface $registrationDate = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $schoolYear = null;
-
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 50)]
     private ?string $status = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $medicalNote = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    #[ORM\Column(length: 50)]
+    private ?string $registrationNumber = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $updatedAt = null;
+    /**
+     * @var Collection<int, Enrollment>
+     */
+    /*#[ORM\OneToMany(targetEntity: Enrollment::class, mappedBy: 'student', orphanRemoval: true)]
+    private Collection $enrollments;*/
 
-    public function getId(): ?int
+    public function __construct()
     {
-        return $this->id;
+        
     }
 
-    public function getFirstname(): ?string
-    {
-        return $this->firstname;
-    }
+    // =========================
+    // GETTERS / SETTERS
+    // =========================
 
-    public function setFirstname(string $firstname): static
-    {
+    public function getId(): ?int { return $this->id; }
+
+    public function getFirstname(): ?string { return $this->firstname; }
+    public function setFirstname(string $firstname): self {
         $this->firstname = $firstname;
-
         return $this;
     }
 
-    public function getLastname(): ?string
-    {
-        return $this->lastname;
-    }
-
-    public function setLastname(string $lastname): static
-    {
+    public function getLastname(): ?string { return $this->lastname; }
+    public function setLastname(string $lastname): self {
         $this->lastname = $lastname;
-
         return $this;
     }
 
-    public function getBirthDate(): ?\DateTime
-    {
-        return $this->birthDate;
-    }
-
-    public function setBirthDate(\DateTime $birthDate): static
-    {
+    public function getBirthDate(): ?\DateTimeInterface { return $this->birthDate; }
+    public function setBirthDate(\DateTimeInterface $birthDate): self {
         $this->birthDate = $birthDate;
-
         return $this;
     }
 
-    public function getGender(): ?string
-    {
-        return $this->gender;
-    }
-
-    public function setGender(string $gender): static
-    {
+    public function getGender(): ?string { return $this->gender; }
+    public function setGender(string $gender): self {
         $this->gender = $gender;
-
         return $this;
     }
 
-    public function getParentName(): ?string
-    {
-        return $this->parentName;
-    }
-
-    public function setParentName(string $parentName): static
-    {
-        $this->parentName = $parentName;
-
+    public function getAddress(): ?string { return $this->address; }
+    public function setAddress(string $address): self {
+        $this->address = $address;
         return $this;
     }
 
-    public function getParentPhone(): ?string
-    {
-        return $this->parentPhone;
-    }
-
-    public function setParentPhone(string $parentPhone): static
-    {
-        $this->parentPhone = $parentPhone;
-
+    public function getPhone(): ?string { return $this->phone; }
+    public function setPhone(string $phone): self {
+        $this->phone = $phone;
         return $this;
     }
 
-    public function getParentEmail(): ?string
-    {
-        return $this->parentEmail;
-    }
-
-    public function setParentEmail(string $parentEmail): static
-    {
-        $this->parentEmail = $parentEmail;
-
+    public function getEmail(): ?string { return $this->email; }
+    public function setEmail(string $email): self {
+        $this->email = $email;
         return $this;
     }
 
-    public function getParentAddress(): ?string
-    {
-        return $this->parentAddress;
-    }
-
-    public function setParentAddress(string $parentAddress): static
-    {
-        $this->parentAddress = $parentAddress;
-
-        return $this;
-    }
-
-    public function getRegistrationDate(): ?\DateTime
-    {
+    public function getRegistrationDate(): ?\DateTimeInterface {
         return $this->registrationDate;
     }
-
-    public function setRegistrationDate(\DateTime $registrationDate): static
-    {
-        $this->registrationDate = $registrationDate;
-
+    public function setRegistrationDate(\DateTimeInterface $date): self {
+        $this->registrationDate = $date;
         return $this;
     }
 
-    public function getSchoolYear(): ?string
-    {
-        return $this->schoolYear;
-    }
-
-    public function setSchoolYear(string $schoolYear): static
-    {
-        $this->schoolYear = $schoolYear;
-
-        return $this;
-    }
-
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
-    public function setStatus(string $status): static
-    {
+    public function getStatus(): ?string { return $this->status; }
+    public function setStatus(string $status): self {
         $this->status = $status;
+        return $this;
+    }
+
+    public function getMedicalNote(): ?string { return $this->medicalNote; }
+    public function setMedicalNote(?string $note): self {
+        $this->medicalNote = $note;
+        return $this;
+    }
+
+
+    /**
+     * @return Collection<int, Enrollment>
+     */
+    /*public function getEnrollments(): Collection
+    {
+        return $this->enrollments;
+    }
+
+    public function addEnrollment(Enrollment $enrollment): static
+    {
+        if (!$this->enrollments->contains($enrollment)) {
+            $this->enrollments->add($enrollment);
+            $enrollment->setStudent($this);
+        }
 
         return $this;
     }
 
-    public function getMedicalNote(): ?string
+    public function removeEnrollment(Enrollment $enrollment): static
     {
-        return $this->medicalNote;
-    }
-
-    public function setMedicalNote(string $medicalNote): static
-    {
-        $this->medicalNote = $medicalNote;
+        if ($this->enrollments->removeElement($enrollment)) {
+            // set the owning side to null (unless already changed)
+            if ($enrollment->getStudent() === $this) {
+                $enrollment->setStudent(null);
+            }
+        }
 
         return $this;
+    }*/
+
+    public function getRegistrationNumber(): ?string
+    {
+        return $this->registrationNumber;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function setRegistrationNumber(string $registrationNumber): static
     {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
-    {
-        $this->updatedAt = $updatedAt;
+        $this->registrationNumber = $registrationNumber;
 
         return $this;
     }
