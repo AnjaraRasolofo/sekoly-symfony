@@ -25,6 +25,7 @@ final class CourseController extends AbstractController
         return $this->json($courses, 200);
     }
 
+    #[Route('/api/courses', methods: ['POST'])]
     public function create(Request $request, EntityManagerInterface $em, TeacherRepository $teacherRepo, 
                             SubjectRepository $subjectRepo, ClassroomRepository $classroomRepo, 
                             SchoolYearRepository $schoolYearRepo): JsonResponse
@@ -66,12 +67,68 @@ final class CourseController extends AbstractController
         }
 
         $course = new Course();
-        /*$course->setTeacher($teacher);
+        $course->setTeacher($teacher);
         $course->setSubject($subject);
         $course->setClassroom($classroom);
         $course->setSchoolYear($schoolYear);
         $course->setCoefficient($data['coefficient']);
-        //$course->set*/
+        $course->setHoursPerWeek($data['hoursPerWeek']);
+
+        $em->persist($course);
+        $em->flush();
+        
+        return $this->json($course, 201);
+    }
+
+    #[Route('/api/courses/{id}', methods: ['PUT'])]
+    public function edit(Course $course, Request $request, EntityManagerInterface $em, TeacherRepository $teacherRepo, 
+                            SubjectRepository $subjectRepo, ClassroomRepository $classroomRepo, 
+                            SchoolYearRepository $schoolYearRepo): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        if(!$data) 
+        {
+            return $this->json(['message' => 'JSON invalide'], 400);
+        }
+
+        $teacher = $teacherRepo->find($data['teacherId'] ?? null);
+        $subject = $subjectRepo->find($data['subjectId'] ?? null);
+        $classroom = $classroomRepo->find($data['classroomId'] ?? null);
+        $schoolYear = $schoolYearRepo->find($data['schoolYearId'] ?? null);
+
+        if (!$teacher) {
+            return $this->json([
+                'message' => 'Enseignant introuvable.'
+            ], 404);
+        }
+
+        if (!$subject) {
+            return $this->json([
+                'message' => 'Matière introuvable.'
+            ], 404);
+        }
+
+        if (!$classroom) {
+            return $this->json([
+                'message' => 'Classe introuvable.'
+            ], 404);
+        }
+
+        if (!$schoolYear) {
+            return $this->json([
+                'message' => 'Année scolaire introuvable.'
+            ], 404);
+        }
+
+        $course->setTeacher($teacher);
+        $course->setSubject($subject);
+        $course->setClassroom($classroom);
+        $course->setSchoolYear($schoolYear);
+        $course->setCoefficient($data['coefficient']);
+        $course->setHoursPerWeek($data['hoursPerWeek']);
+
+        $em->flush();
         
         return $this->json($course, 201);
     }

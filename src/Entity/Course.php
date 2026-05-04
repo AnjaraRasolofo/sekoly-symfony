@@ -6,6 +6,7 @@ use App\Repository\CourseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: CourseRepository::class)]
 class Course
@@ -13,170 +14,105 @@ class Course
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['course:read'])]
     private ?int $id = null;
+  
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['course:read'])]
+    private ?Subject $subject = null;
 
-    /**
-     * @var Collection<int, Subject>
-     */
-    #[ORM\OneToMany(targetEntity: Subject::class, mappedBy: 'course')]
-    private Collection $subject;
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['course:read'])]
+    private ?Teacher $teacher = null;
 
-    /**
-     * @var Collection<int, Teacher>
-     */
-    #[ORM\OneToMany(targetEntity: Teacher::class, mappedBy: 'course')]
-    private Collection $teacher;
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['course:read'])]
+    private ?Classroom $classroom = null;
 
-    /**
-     * @var Collection<int, Classroom>
-     */
-    #[ORM\OneToMany(targetEntity: Classroom::class, mappedBy: 'course')]
-    private Collection $classroom;
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['course:read'])]
+    private ?SchoolYear $schoolYear = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $start = null;
+    #[Groups(['course:read'])]
+    private ?int $coefficient = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $end = null;
-
-    #[ORM\ManyToOne(inversedBy: 'course')]
-    private ?Attendance $attendance = null;
-
-    public function __construct()
-    {
-        $this->subject = new ArrayCollection();
-        $this->teacher = new ArrayCollection();
-        $this->classroom = new ArrayCollection();
-    }
+    #[Groups(['course:read'])]
+    private ?int $hoursPerWeek = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return Collection<int, Subject>
-     */
-    public function getSubject(): Collection
-    {
-        return $this->subject;
-    }
-
-    public function addSubject(Subject $subject): static
-    {
-        if (!$this->subject->contains($subject)) {
-            $this->subject->add($subject);
-            $subject->setCourse($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSubject(Subject $subject): static
-    {
-        if ($this->subject->removeElement($subject)) {
-            // set the owning side to null (unless already changed)
-            if ($subject->getCourse() === $this) {
-                $subject->setCourse(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Teacher>
-     */
-    public function getTeacher(): Collection
+    public function getTeacher(): ?Teacher
     {
         return $this->teacher;
     }
 
-    public function addTeacher(Teacher $teacher): static
+    public function setTeacher(?Teacher $teacher): static
     {
-        if (!$this->teacher->contains($teacher)) {
-            $this->teacher->add($teacher);
-            $teacher->setCourse($this);
-        }
-
+        $this->teacher = $teacher;
         return $this;
     }
 
-    public function removeTeacher(Teacher $teacher): static
+    public function getSubject(): ?Subject
     {
-        if ($this->teacher->removeElement($teacher)) {
-            // set the owning side to null (unless already changed)
-            if ($teacher->getCourse() === $this) {
-                $teacher->setCourse(null);
-            }
-        }
+        return $this->subject;
+    }
 
+    public function setSubject(?Subject $subject): static
+    {
+        $this->subject = $subject;
         return $this;
     }
 
-    /**
-     * @return Collection<int, Classroom>
-     */
-    public function getClassroom(): Collection
+    public function getClassroom(): ?Classroom
     {
         return $this->classroom;
     }
 
-    public function addClassroom(Classroom $classroom): static
+    public function setClassroom(?Classroom $classroom): static
     {
-        if (!$this->classroom->contains($classroom)) {
-            $this->classroom->add($classroom);
-            $classroom->setCourse($this);
-        }
-
+        $this->classroom = $classroom;
         return $this;
     }
 
-    public function removeClassroom(Classroom $classroom): static
+    public function getSchoolYear(): ?SchoolYear
     {
-        if ($this->classroom->removeElement($classroom)) {
-            // set the owning side to null (unless already changed)
-            if ($classroom->getCourse() === $this) {
-                $classroom->setCourse(null);
-            }
-        }
+        return $this->schoolYear;
+    }
 
+    public function setSchoolYear(?SchoolYear $schoolYear): static
+    {
+        $this->schoolYear = $schoolYear;
         return $this;
     }
 
-    public function getStart(): ?\DateTimeImmutable
+    public function getCoefficient(): ?int
     {
-        return $this->start;
+        return $this->coefficient;
     }
 
-    public function setStart(\DateTimeImmutable $start): static
+    public function setCoefficient(int $coefficient): static
     {
-        $this->start = $start;
-
+        $this->coefficient = $coefficient;
         return $this;
     }
 
-    public function getEnd(): ?\DateTimeImmutable
+    public function getHoursPerWeek(): ?int
     {
-        return $this->end;
+        return $this->hoursPerWeek;
     }
 
-    public function setEnd(\DateTimeImmutable $end): static
+    public function setHoursPerWeek(int $hoursPerWeek): static
     {
-        $this->end = $end;
-
-        return $this;
-    }
-
-    public function getAttendance(): ?Attendance
-    {
-        return $this->attendance;
-    }
-
-    public function setAttendance(?Attendance $attendance): static
-    {
-        $this->attendance = $attendance;
-
+        $this->hoursPerWeek = $hoursPerWeek;
         return $this;
     }
 }

@@ -9,8 +9,13 @@ use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\Ignore;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: EnrollmentRepository::class)]
+#[UniqueEntity(
+    fields:['student', 'schoolYear'],
+    message: 'Cet élève est déjà inscrit pour cette année scolaire.'
+)]
 class Enrollment
 {
     #[ORM\Id]
@@ -44,12 +49,15 @@ class Enrollment
     private ?string $status = 'active';
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    #[Groups(['enrollment:read'])]
     private ?string $totalFee = '0.00';
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Groups(['enrollment:read'])]
     private ?\DateTime $paymentDeadline = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['enrollment:read'])]
     private ?string $paymentStatus = 'unpaid'; // unpaid, partial, paid, late, cancelled
 
     #[ORM\OneToMany(mappedBy: 'enrollment', targetEntity: Payment::class, orphanRemoval: true)]
