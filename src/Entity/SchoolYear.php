@@ -16,11 +16,11 @@ class SchoolYear
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['enrollment:read'])]
+    #[Groups(['schoolyear:read', 'enrollment:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 20)]
-    #[Groups(['enrollment:read'])]
+    #[Groups(['schoolyear:read', 'enrollment:read'])]
     private ?string $yearLabel = null;
 
     /**

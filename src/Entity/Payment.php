@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\PaymentRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -16,88 +14,63 @@ class Payment
     #[ORM\Column]
     private ?int $id = null;
 
-    /**
-     * @var Collection<int, Student>
-     */
-    #[ORM\OneToMany(targetEntity: Student::class, mappedBy: 'payment')]
-    private Collection $student;
+    #[ORM\ManyToOne(inversedBy: 'payments')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Enrollment $enrollment = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?float $amount = null;
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $amount = '0.00';
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTime $date = null;
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $paymentDate = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 50)]
     private ?string $method = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $status = null;
+    #[ORM\Column(length: 50)]
+    private ?string $status = 'paid';
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $reference = null;
 
-    public function __construct()
-    {
-        $this->student = new ArrayCollection();
-    }
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $note = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return Collection<int, Student>
-     */
-    public function getStudent(): Collection
+    public function getEnrollment(): ?Enrollment
     {
-        return $this->student;
+        return $this->enrollment;
     }
 
-    public function addStudent(Student $student): static
+    public function setEnrollment(?Enrollment $enrollment): static
     {
-        if (!$this->student->contains($student)) {
-            $this->student->add($student);
-            $student->setPayment($this);
-        }
-
+        $this->enrollment = $enrollment;
         return $this;
     }
 
-    public function removeStudent(Student $student): static
-    {
-        if ($this->student->removeElement($student)) {
-            // set the owning side to null (unless already changed)
-            if ($student->getPayment() === $this) {
-                $student->setPayment(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getAmount(): ?float
+    public function getAmount(): ?string
     {
         return $this->amount;
     }
 
-    public function setAmount(?float $amount): static
+    public function setAmount(string $amount): static
     {
         $this->amount = $amount;
-
         return $this;
     }
 
-    public function getDate(): ?\DateTime
+    public function getPaymentDate(): ?\DateTimeInterface
     {
-        return $this->date;
+        return $this->paymentDate;
     }
 
-    public function setDate(?\DateTime $date): static
+    public function setPaymentDate(\DateTimeInterface $paymentDate): static
     {
-        $this->date = $date;
-
+        $this->paymentDate = $paymentDate;
         return $this;
     }
 
@@ -109,7 +82,6 @@ class Payment
     public function setMethod(?string $method): static
     {
         $this->method = $method;
-
         return $this;
     }
 
@@ -121,7 +93,6 @@ class Payment
     public function setStatus(?string $status): static
     {
         $this->status = $status;
-
         return $this;
     }
 
@@ -133,7 +104,17 @@ class Payment
     public function setReference(?string $reference): static
     {
         $this->reference = $reference;
+        return $this;
+    }
 
+    public function getNote(): ?string
+    {
+        return $this->note;
+    }
+
+    public function setNote(?string $note): static
+    {
+        $this->note = $note;
         return $this;
     }
 }

@@ -20,13 +20,13 @@ final class StudentController extends AbstractController
     #[Route('', methods: ['GET'])]
     public function index(StudentRepository $repo): JsonResponse
     {
-        return $this->json($repo->findAll(), 200);
+        return $this->json($repo->findAll(), 200, [], ['groups' => 'student:read']);
     }
 
     #[Route('/{id}', methods: ['GET'])]
     public function show(Student $student) : JsonResponse
     {
-        return $this->json($student, 200);
+        return $this->json($student, 200, [], ['groups' => 'student:read']);
     }
 
     #[Route('', methods: ['POST'])]
@@ -81,7 +81,7 @@ final class StudentController extends AbstractController
 
         return $this->json(['Student deleted'], 200);
     }
-
+    /*
     #[Route('/register', methods: ['POST'])]
     public function register(
         Request $request,
@@ -203,6 +203,6 @@ final class StudentController extends AbstractController
             'student_id' => $student->getId(),
             'enrollment_id' => $enrollment->getId()
         ], 201);
-    }
+    }*/
 }
 

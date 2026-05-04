@@ -14,11 +14,11 @@ class Classroom
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['classroom:read'])]
+    #[Groups(['classroom:read', 'enrollment:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['classroom:read'])]
+    #[Groups(['classroom:read', 'enrollment:read'])]
     private ?string $classname = null;
 
     #[ORM\Column(length: 255)]
@@ -82,33 +82,33 @@ class Classroom
     }
 
 
-/**
- * @return Collection<int, Enrollment>
- */
-public function getEnrollments(): Collection
-{
-    return $this->enrollments;
-}
-
-public function addEnrollment(Enrollment $enrollment): static
-{
-    if (!$this->enrollments->contains($enrollment)) {
-        $this->enrollments->add($enrollment);
-        $enrollment->setClassroom($this);
+    /**
+     * @return Collection<int, Enrollment>
+     */
+    public function getEnrollments(): Collection
+    {
+        return $this->enrollments;
     }
 
-    return $this;
-}
-
-public function removeEnrollment(Enrollment $enrollment): static
-{
-    if ($this->enrollments->removeElement($enrollment)) {
-        // set the owning side to null (unless already changed)
-        if ($enrollment->getClassroom() === $this) {
-            $enrollment->setClassroom(null);
+    public function addEnrollment(Enrollment $enrollment): static
+    {
+        if (!$this->enrollments->contains($enrollment)) {
+            $this->enrollments->add($enrollment);
+            $enrollment->setClassroom($this);
         }
+
+        return $this;
     }
 
-    return $this;
-}
+    public function removeEnrollment(Enrollment $enrollment): static
+    {
+        if ($this->enrollments->removeElement($enrollment)) {
+            // set the owning side to null (unless already changed)
+            if ($enrollment->getClassroom() === $this) {
+                $enrollment->setClassroom(null);
+            }
+        }
+
+        return $this;
+    }
 }

@@ -15,53 +15,62 @@ class Student
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['enrollment:read'])]
+    #[Groups(['student:read', 'enrollment:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['enrollment:read'])]
+    #[Groups(['student:read', 'enrollment:read'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['enrollment:read'])]
+    #[Groups(['student:read', 'enrollment:read'])]
     private ?string $lastname = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(['student:read'])]
     private ?\DateTimeInterface $birthDate = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['student:read'])]
     private ?string $gender = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['student:read'])]
     private ?string $address = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['student:read'])]
     private ?string $phone = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['student:read'])]
     private ?string $email = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(['student:read'])]
     private ?\DateTimeInterface $registrationDate = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['student:read'])]
     private ?string $status = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['student:read'])]
     private ?string $medicalNote = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['student:read', 'enrollment:read'])]
     private ?string $registrationNumber = null;
 
     /**
      * @var Collection<int, Enrollment>
      */
-    /*#[ORM\OneToMany(targetEntity: Enrollment::class, mappedBy: 'student', orphanRemoval: true)]
-    private Collection $enrollments;*/
+    #[ORM\OneToMany(targetEntity: Enrollment::class, mappedBy: 'student', orphanRemoval: true)]
+    private Collection $enrollments;
 
     public function __construct()
     {
-        
+        $this->enrollments = new ArrayCollection();
     }
 
     // =========================
@@ -132,11 +141,10 @@ class Student
         return $this;
     }
 
-
     /**
      * @return Collection<int, Enrollment>
      */
-    /*public function getEnrollments(): Collection
+    public function getEnrollments(): Collection
     {
         return $this->enrollments;
     }
@@ -154,14 +162,13 @@ class Student
     public function removeEnrollment(Enrollment $enrollment): static
     {
         if ($this->enrollments->removeElement($enrollment)) {
-            // set the owning side to null (unless already changed)
             if ($enrollment->getStudent() === $this) {
                 $enrollment->setStudent(null);
             }
         }
 
         return $this;
-    }*/
+    }
 
     public function getRegistrationNumber(): ?string
     {

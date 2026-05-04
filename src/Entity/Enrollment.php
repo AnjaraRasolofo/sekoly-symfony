@@ -7,6 +7,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\Ignore;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: EnrollmentRepository::class)]
 class Enrollment
@@ -24,7 +26,8 @@ class Enrollment
 
     #[ORM\ManyToOne(inversedBy: 'enrollments')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Ignore]
+    //-- #[Ignore]
+    #[Groups(['enrollment:read'])]
     private ?Classroom $classroom = null;
 
     #[ORM\ManyToOne(inversedBy: 'enrollments')]
@@ -40,6 +43,24 @@ class Enrollment
     #[Groups(['enrollment:read'])]
     private ?string $status = 'active';
 
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $totalFee = '0.00';
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTime $paymentDeadline = null;
+
+    #[ORM\Column(length: 50)]
+    private ?string $paymentStatus = 'unpaid'; // unpaid, partial, paid, late, cancelled
+
+    #[ORM\OneToMany(mappedBy: 'enrollment', targetEntity: Payment::class, orphanRemoval: true)]
+    private Collection $payments;
+
+    public function __construct()
+    {
+        $this->payments = new ArrayCollection();
+        $this->enrollmentDate = new \DateTime();
+    }
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -103,5 +124,92 @@ class Enrollment
         $this->status = $status;
 
         return $this;
+    }
+
+    public function getTotalFee(): ?string
+    {
+        return $this->totalFee;
+    }
+
+    public function setTotalFee(string $totalFee): static
+    {
+        $this->totalFee = $totalFee;
+
+        return $this;
+    }
+
+    public function getPaymentDeadline(): ?\DateTime
+    {
+        return $this->paymentDeadline;
+    }
+
+    public function setPaymentDeadline(?\DateTime $paymentDeadline): static
+    {
+        $this->paymentDeadline = $paymentDeadline;
+
+        return $this;
+    }
+
+    public function getPaymentStatus(): ?string
+    {
+        return $this->paymentStatus;
+    }
+
+    public function setPaymentStatus(string $paymentStatus): static
+    {
+        $this->paymentStatus = $paymentStatus;
+
+        return $this;
+    }
+
+    public function getPayments(): Collection
+    {
+        return $this->payments;
+    }
+
+    public function addPayment(Payment $payment): static
+    {
+        if (!$this->payments->contains($payment)) {
+            $this->payments->add($payment);
+            $payment->setEnrollment($this);
+        }
+
+        return $this;
+    }
+
+    public function removePayment(Payment $payment): static
+    {
+        if ($this->payments->removeElement($payment)) {
+            if ($payment->getEnrollment() === $this) {
+                $payment->setEnrollment(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getTotalPaid(): float
+    {
+        $total = 0;
+
+        foreach ($this->payments as $payment) {
+            if ($payment->getStatus() === 'paid') {
+                $total += (float) $payment->getAmount();
+            }
+        }
+
+        return $total;
+    }
+
+    public function getRemainingAmount(): float
+    {
+        return (float) $this->totalFee - $this->getTotalPaid();
+    }
+
+    public function isLate(): bool
+    {
+        return $this->paymentDeadline !== null
+            && new \DateTime() > $this->paymentDeadline
+            && $this->getRemainingAmount() > 0;
     }
 }

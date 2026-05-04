@@ -27,7 +27,6 @@ class RegisterController
         $hashedPassword = $hasher->hashPassword($user, $data['password']);
         $user->setPassword($hashedPassword);
 
-        // ⚠️ ici tu définis le rôle admin
         $user->setRoles(['ROLE_USER']);
 
         $em->persist($user);

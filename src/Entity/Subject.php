@@ -23,12 +23,6 @@ class Subject
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\ManyToOne(inversedBy: 'subject')]
-    private ?Course $course = null;
-
-    #[ORM\ManyToOne(inversedBy: 'subject')]
-    private ?Exam $exam = null;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -70,27 +64,4 @@ class Subject
         return $this;
     }
 
-    public function getCourse(): ?Course
-    {
-        return $this->course;
-    }
-
-    public function setCourse(?Course $course): static
-    {
-        $this->course = $course;
-
-        return $this;
-    }
-
-    public function getExam(): ?Exam
-    {
-        return $this->exam;
-    }
-
-    public function setExam(?Exam $exam): static
-    {
-        $this->exam = $exam;
-
-        return $this;
-    }
 }
